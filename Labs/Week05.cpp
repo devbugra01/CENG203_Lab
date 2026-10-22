@@ -27,15 +27,15 @@ void runWeek05()
 
     // ---------- Q4: tail vs non-tail sum ----------
     cout << "[Q4] tailSum(5, 0) = " << tailSum(5, 0)
-         << "   nonTailSum(5) = " << nonTailSum(5) << endl;
+        << "   nonTailSum(5) = " << nonTailSum(5) << endl;
 
     // ---------- Q5: factorial ----------
     try {
         cout << "[Q5] factorial(5) = " << factorial(5)
-             << "   factorial(0) = " << factorial(0) << endl;
+            << "   factorial(0) = " << factorial(0) << endl;
         cout << "[Q5] factorial(20) = " << factorial(20) << endl;
         cout << "[Q5] factorialTail(4, 1) = " << factorialTail(4, 1)
-             << endl;
+            << endl;
         cout << "[Q5] calling factorial(-3) ..." << endl;
         long long bad = factorial(-3);          // throws: next line skipped
         cout << "[Q5] factorial(-3) = " << bad << endl;
@@ -48,14 +48,14 @@ void runWeek05()
     int calls = 0;
     cout << fixed << setprecision(3);
     cout << "[Q6] power(2, 3) = " << power(2, 3, calls)
-         << "   power(2, -3) = " << power(2, -3, calls)
-         << "   power(5, 0) = " << power(5, 0, calls) << endl;
+        << "   power(2, -3) = " << power(2, -3, calls)
+        << "   power(5, 0) = " << power(5, 0, calls) << endl;
     calls = 0;
     cout << "[Q6] power(2, 10) = " << power(2, 10, calls)
-         << "  calls = " << calls << endl;
+        << "  calls = " << calls << endl;
     calls = 0;
     cout << "[Q6] fastPower(2, 10) = " << fastPower(2, 10, calls)
-         << "  calls = " << calls << endl;
+        << "  calls = " << calls << endl;
     calls = 0;
     cout << "[Q6] fastPower(2, 100) calls = ";
     fastPower(2, 100, calls);
@@ -64,9 +64,9 @@ void runWeek05()
 
     // ---------- Q7: isEven / isOdd ----------
     cout << "[Q7] isEven(4) = " << isEven(4)
-         << "   isOdd(4) = " << isOdd(4) << endl;
+        << "   isOdd(4) = " << isOdd(4) << endl;
     cout << "[Q7] isEven(7) = " << isEven(7)
-         << "   isOdd(-3) = " << isOdd(-3) << endl;
+        << "   isOdd(-3) = " << isOdd(-3) << endl;
 
     // ---------- Q8: linked list, recursive ----------
     LinkedList list;
@@ -88,7 +88,7 @@ void runWeek05()
         long long fibCalls = 0;
         long long value = fib(n, fibCalls);
         cout << "[Q10] fib(" << n << ") = " << value
-             << "  calls = " << fibCalls
-             << "  fibIter = " << fibIter(n) << endl;
+            << "  calls = " << fibCalls
+            << "  fibIter = " << fibIter(n) << endl;
     }
 }

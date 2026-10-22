@@ -1,40 +1,3 @@
-#pragma once
-#include <string>
-
-// Week 5: recursive functions. Free functions, no class.
-// Every function has a base case (stop) and a recursive case (call).
-
-// ---- Q1 / Q2: tracing the call stack ----
-void countdown(int n);                      // prints Entering / Exiting
-void buggyCountdown(int n);                 // Q2: NO base case - crashes!
-void fixedCountdown(int n);                 // Q2: 3 2 1
-
-// ---- Q3 / Q4: tail vs non-tail ----
-void tailPrint(int n);                      // 3 2 1  (work BEFORE call)
-void nonTailPrint(int n);                   // 1 2 3  (work AFTER call)
-int  tailSum(int n, int accumulator);       // tailSum(5, 0) = 15
-int  nonTailSum(int n);                     // nonTailSum(5) = 15
-
-// ---- Q5: factorial ----
-long long factorial(int n);                 // throws std::invalid_argument
-long long factorialTail(int n, long long acc);   // factorialTail(4, 1) = 24
-
-// ---- Q6: power ----
-double power(double base, int exponent, int& calls);      // linear
-double fastPower(double base, int exponent, int& calls);  // squaring
-
-// ---- Q7: indirect (mutual) recursion ----
-bool isEven(int n);
-bool isOdd(int n);
-
-// ---- Q9: indirect recursion - expression parser ----
-void parseExpression(const std::string& expr, int& index);
-void parseOperand(const std::string& expr, int& index);
-
-// ---- Q10: tree recursion ----
-long long fib(int n, long long& calls);     // naive, counts its calls
-long long fibIter(int n);                   // loop version
-
 #include "Recursion.h"
 #include <iostream>
 #include <stdexcept>                // std::invalid_argument
@@ -61,7 +24,7 @@ void buggyCountdown(int n)
 
 void fixedCountdown(int n)
 {
-    if (n <= 0)
+    if (n <= 0)                     // base case
         return;
     cout << n << " ";
     fixedCountdown(n - 1);
@@ -72,30 +35,30 @@ void tailPrint(int n)
 {
     if (n <= 0)
         return;
-    cout << n << " ";
-    tailPrint(n - 1);
+    cout << n << " ";               // print first ...
+    tailPrint(n - 1);               // ... the call is the LAST action
 }
 
 void nonTailPrint(int n)
 {
     if (n <= 0)
         return;
-    nonTailPrint(n - 1);
-    cout << n << " ";
+    nonTailPrint(n - 1);            // call first ...
+    cout << n << " ";               // ... printing waits on the stack
 }
 
 int tailSum(int n, int accumulator)
 {
-    if (n <= 0)
-        return accumulator;
-    return tailSum(n - 1, accumulator + n);
+    if (n == 0)
+        return accumulator;         // the answer is already complete
+    return tailSum(n - 1, accumulator + n);   // nothing pending
 }
 
 int nonTailSum(int n)
 {
-    if (n <= 0)
+    if (n == 0)
         return 0;
-    return n + nonTailSum(n - 1);
+    return n + nonTailSum(n - 1);   // the "+ n" waits for the result
 }
 
 // ============================ Q5 ============================
@@ -104,65 +67,50 @@ long long factorial(int n)
     if (n < 0)
         throw invalid_argument("Factorial of negative number is undefined");
     if (n == 0 || n == 1)
-        return 1;
-    return n * factorial(n - 1);
+        return 1;                   // base case
+    return n * factorial(n - 1);    // pending multiplication
 }
 
 long long factorialTail(int n, long long acc)
 {
-    if (n < 0)
-        throw invalid_argument("Factorial of negative number is undefined");
-    if (n == 0 || n == 1)
+    if (n <= 1)
         return acc;
-    return factorialTail(n - 1, acc * n);
+    return factorialTail(n - 1, n * acc);
 }
 
 // ============================ Q6 ============================
 double power(double base, int exponent, int& calls)
 {
-    calls++;                        // keep this line: it counts the calls
-    if (exponent == 0)
-        return 1.0;
-    if (exponent == 1)
-        return base;
-    if (exponent < 0)
-        return 1.0 / power(base, -exponent, calls);
-    return base * power(base, exponent - 1, calls);
+    calls++;
+    if (exponent == 0) return 1;                            // base case 1
+    if (exponent == 1) return base;                         // base case 2
+    if (exponent < 0) return 1 / power(base, -exponent, calls);
+    return base * power(base, exponent - 1, calls);         // one less
 }
 
 double fastPower(double base, int exponent, int& calls)
 {
     calls++;
-    if (exponent == 0)
-        return 1.0;
-    if (exponent == 1)
-        return base;
-    if (exponent < 0)
-        return 1.0 / fastPower(base, -exponent, calls);
-
-    double half = fastPower(base, exponent / 2, calls);
+    if (exponent == 0) return 1;
+    if (exponent < 0) return 1 / fastPower(base, -exponent, calls);
+    double half = fastPower(base, exponent / 2, calls);     // halve it
     if (exponent % 2 == 0)
         return half * half;
-    else
-        return half * half * base;
+    return half * half * base;                              // odd: x base
 }
 
 // ============================ Q7 ============================
 bool isEven(int n)
 {
-    if (n < 0)
-        n = -n;
-    if (n == 0)
-        return true;
-    return isOdd(n - 1);
+    if (n < 0) n = -n;
+    if (n == 0) return true;        // base case
+    return isOdd(n - 1);            // calls the OTHER function
 }
 
 bool isOdd(int n)
 {
-    if (n < 0)
-        n = -n;
-    if (n == 0)
-        return false;
+    if (n < 0) n = -n;
+    if (n == 0) return false;       // base case
     return isEven(n - 1);
 }
 
@@ -175,7 +123,7 @@ void parseExpression(const string& expr, int& index)
             parseOperand(expr, index);
         }
         else if (expr[index] == '+' || expr[index] == '*' ||
-                 expr[index] == '-') {
+            expr[index] == '-') {
             cout << "Operator: " << expr[index] << endl;
             index++;
         }
@@ -209,26 +157,19 @@ void parseOperand(const string& expr, int& index)
 // ============================ Q10 ============================
 long long fib(int n, long long& calls)
 {
-    calls++;                        // keep this line
-    if (n <= 0)
-        return 0;
-    if (n == 1)
-        return 1;
-    return fib(n - 1, calls) + fib(n - 2, calls);
+    calls++;
+    if (n <= 1)
+        return n;                   // fib(0) = 0, fib(1) = 1
+    return fib(n - 1, calls) + fib(n - 2, calls);   // TWO calls: tree
 }
 
 long long fibIter(int n)
 {
-    if (n <= 0)
-        return 0;
-    if (n == 1)
-        return 1;
-    long long prev2 = 0;
-    long long prev1 = 1;
-    for (int i = 2; i <= n; i++) {
-        long long curr = prev1 + prev2;
-        prev2 = prev1;
-        prev1 = curr;
+    long long a = 0, b = 1;
+    for (int i = 0; i < n; i++) {
+        long long next = a + b;
+        a = b;
+        b = next;
     }
-    return prev1;
+    return a;
 }
